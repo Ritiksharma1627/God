@@ -28,8 +28,8 @@ jobs:
       - name: Compile C++ Code
         run: g++ -std=c++14 soul.cpp -o soul -pthread
 
-      - name: Run C++ Executable
-        run: ./soul  # Ensure the compiled C++ program is executed
+     # - name: Run C++ Executable
+       # run: ./soul  # Ensure the compiled C++ program is executed
 
       - name: Run Python Application
         run: python soul.py  # Python script execution
