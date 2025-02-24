@@ -1,36 +1,24 @@
-name: Python Application CI
+name: Build and Run C++ & Python
 
-on:
-  push:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Make sure it's an Ubuntu runner
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Set Up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
+    - name: Install dependencies
+      run: |
+        sudo apt update
+        sudo apt install g++ -y
+        sudo apt install python3-pip -y
+        pip3 install telebot pymongo aiohttp
 
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          sudo apt install g++ -y
-          pip install telebot pymongo aiohttp
-          pip install pymongo python-telegram-bot pyTelegramBotAPI certifi
+    - name: Compile C++ code
+      run: g++ -std=c++14 soul.cpp -o soul -pthread
 
-      - name: Compile C++ Code
-        run: g++ -std=c++14 soul.cpp -o soul -pthread
-
-     # - name: Run C++ Executable
-       # run: ./soul  # Ensure the compiled C++ program is executed
-
-      - name: Run Python Application
-        run: python soul.py  # Python script execution
-
+    - name: Run Python script
+      run: python3 soul.py
