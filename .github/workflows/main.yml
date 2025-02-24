@@ -1,0 +1,37 @@
+name: Python Application CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y g++ python3-pip
+          pip3 install telebot pymongo aiohttp
+
+      - name: Compile C++ File
+        run: |
+          if [ -f soul.cpp ]; then
+            g++ -std=c++14 soul.cpp -o soul -pthread
+          else
+            echo "Error: soul.cpp not found!"
+            exit 1
+          fi
+
+      - name: Run Application
+        run: python3 soul.py
